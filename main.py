@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QRadioButton, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox,QButtonGroup
+from PyQt5.QtWidgets import QApplication, QWidget, QRadioButton, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QButtonGroup
 import sys
-
+from random import shuffle
 
 app = QApplication(sys.argv)
 window = QWidget()
@@ -35,6 +35,7 @@ def show_question():
     radio_group.setExclusive(True)
 
 def show_result():
+    check_answer()
     groubox_answer.hide()
     grbox_result.show()
     btn_ok.setText('Сдедующий вопрос')
@@ -72,11 +73,42 @@ h_line_main_3.addStretch(1)
 h_line_main_3.addWidget(btn_ok, stretch=2)
 h_line_main_3.addStretch(1)
 
+class Question:
+    def __init__(self, question, right_answer, wrong1, wrong2, wrong3):
+        self.question = question
+        self.right_answer = right_answer
+        self.wrong1 = wrong1
+        self.wrong2 = wrong2
+        self.wrong3 = wrong3
+
+question_list = [
+    Question('сколько лет якубовичу', '89', '40', '89', '14')
+    Question()
+]
 v_line_main.addLayout(h_line_main_1, stretch=2)
 v_line_main.addLayout(h_line_main_2, stretch=8)
 v_line_main.addStretch(1)
 v_line_main.addLayout(h_line_main_3, stretch=1)
 v_line_main.addStretch(1)
+
+answer = [rbtn1, rbtn2, rbtn3, rbtn4]
+def ask(q):
+    lbl_gues.setText(q.question)
+    shuffle(answer)
+    answer[0].setText(q.right_answer)
+    answer[1].setText(q.wrong1)
+    answer[2].setText(q.wrong2)
+    answer[3].setText(q.wrong3)
+
+def check_answer():
+    if answer[0].isChecked():
+        lbl_r_a.setText('поздравляю ты прав')
+        grbox_result.setStyleSheet('QGroupBox {border: 2px solid #69f369; border-radius: 8%;}')
+    else:
+        lbl_r_a.setText('ты не прав. \n Правильный ответ: '+ answer[0].text())
+        grbox_result.setStyleSheet('QGroupBox {border: 2px solid #ee4433; border-radius: 8%;}')
+
+ask(question_list[0])
 
 grbox_result.hide()
 window.setLayout(v_line_main)
